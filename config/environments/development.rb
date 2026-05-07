@@ -25,8 +25,16 @@ Rails.application.configure do
     config.action_controller.perform_caching = false
   end
 
-  # Change to :null_store to avoid any caching.
-  config.cache_store = :memory_store
+  # Use Solid Cache (DB-backed) so dev mirrors prod behavior — single Postgres
+  # connection, no Redis. Falls back to memory_store if the cache tables haven't
+  # been created yet (e.g., before bin/setup has run).
+  config.cache_store = :solid_cache_store
+
+  # Run jobs through Solid Queue in development too. The in-Puma plugin
+  # (config.solid_queue.in_puma) is set in puma.rb so a single `bin/dev` boots
+  # the worker alongside the web server.
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
