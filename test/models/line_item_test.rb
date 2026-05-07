@@ -8,7 +8,6 @@ class LineItemTest < ActiveSupport::TestCase
     line_item = order.line_items.first
     assert_equal 1500, line_item.unit_price_cents
 
-    # Later product price changes do not retroactively alter the line item.
     product.update!(unit_price_cents: 9999)
     assert_equal 1500, line_item.reload.unit_price_cents
   end

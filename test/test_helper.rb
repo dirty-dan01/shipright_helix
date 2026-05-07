@@ -6,10 +6,6 @@ module ActiveSupport
   class TestCase
     parallelize(workers: 1)
 
-    # We don't use fixtures — every test builds its own data so the dependency
-    # graph between models stays explicit. Saves debugging "why is this fixture
-    # in the wrong state" later.
-
     def make_user(overrides = {})
       attrs = {
         name: "Test Staff #{SecureRandom.hex(2)}",

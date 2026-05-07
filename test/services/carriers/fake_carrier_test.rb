@@ -2,7 +2,6 @@ require "test_helper"
 
 class Carriers::FakeCarrierTest < ActiveSupport::TestCase
   setup do
-    # Disable random failures and latency for deterministic assertions.
     Rails.application.config.carriers = {
       default: :fake,
       min_latency_ms: 0,
