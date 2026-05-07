@@ -1,0 +1,8 @@
+<%= tag.tr id: dom_id(order, :row), class: "order-row order-row-#{order.status}" do %>
+  <td class="select"><%= check_box_tag "order_ids[]", order.id, false, data: { bulk_actions_target: "checkbox" } %></td>
+  <td><%= link_to order.reference, order_path(order) %></td>
+  <td><%= order.customer.name %></td>
+  <td><%= status_badge(order.status) %></td>
+  <td class="num"><%= order.total.format %></td>
+  <td><%= order.created_at.strftime("%b %-d, %Y") %></td>
+<% end %>

@@ -1,0 +1,106 @@
+<% content_for :title, "Order #{@order.reference}" %>
+
+<%= turbo_stream_from @order %>
+
+<div class="page-header">
+  <div>
+    <p class="muted"><%= link_to "← All orders", orders_path %></p>
+    <h2>Order <%= @order.reference %></h2>
+  </div>
+  <div class="status-block">
+    <%= status_badge(@order.status) %>
+  </div>
+</div>
+
+<div class="grid two-col">
+  <section class="card">
+    <h3>Customer</h3>
+    <p><strong><%= @order.customer.name %></strong></p>
+    <p class="muted"><%= @order.customer.email %></p>
+    <% if @order.customer.phone.present? %>
+      <p class="muted"><%= @order.customer.phone %></p>
+    <% end %>
+  </section>
+
+  <section class="card">
+    <h3>Actions</h3>
+    <% available = @order.available_transitions %>
+    <% if available.empty? %>
+      <p class="muted">No further actions — order is in a terminal state.</p>
+    <% else %>
+      <div class="actions">
+        <% available.each do |target| %>
+          <%= button_to target.to_s.titleize,
+                transition_order_path(@order, state: target),
+                method: :post,
+                class: "btn btn-#{action_button_style(target)}",
+                data: { turbo_confirm: confirmation_for(target) } %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+</div>
+
+<section class="card">
+  <h3>Line items</h3>
+  <table class="line-items-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th class="num">Qty</th>
+        <th class="num">Unit price</th>
+        <th class="num">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @order.line_items.each do |li| %>
+        <tr>
+          <td>
+            <strong><%= li.product.name %></strong>
+            <span class="muted">(<%= li.product.sku %>)</span>
+          </td>
+          <td class="num"><%= li.quantity %></td>
+          <td class="num"><%= li.unit_price.format %></td>
+          <td class="num"><%= li.subtotal.format %></td>
+        </tr>
+      <% end %>
+      <tr class="total-row">
+        <td colspan="3" class="num"><strong>Total</strong></td>
+        <td class="num"><strong><%= @order.total.format %></strong></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <%= render "shipments/tracking", shipment: @order.shipment, order: @order %>
+</section>
+
+<section class="card">
+  <h3>Audit history</h3>
+  <% if @audit_events.any? %>
+    <ul class="audit-list">
+      <% @audit_events.each do |event| %>
+        <li class="audit-entry">
+          <span class="audit-time"><%= event.occurred_at.strftime("%b %-d, %Y %H:%M") %></span>
+          <span class="audit-detail">
+            <% if event.status_change? %>
+              Status changed from <strong><%= event.from_state %></strong>
+              to <strong><%= event.to_state %></strong>
+            <% else %>
+              <%= event.event.titleize %>
+            <% end %>
+            <span class="muted">
+              by <%= event.actor&.display_name || "system" %>
+              <% if event.metadata["source"].present? %>
+                (<%= event.metadata["source"] %>)
+              <% end %>
+            </span>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="muted">No audit events yet.</p>
+  <% end %>
+</section>

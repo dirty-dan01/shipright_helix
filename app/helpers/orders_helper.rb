@@ -1,32 +1,43 @@
-module OrdersHelper
-  def status_badge(status)
-    tag.span(status.to_s.humanize, class: "badge badge-#{status}")
-  end
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "ShipRight" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  def filter_link_class(value, current)
-    if value == current || (value.nil? && current.nil?)
-      "filter-link active"
-    else
-      "filter-link"
-    end
-  end
+    <%= yield :head %>
 
-  def action_button_style(target)
-    case target.to_sym
-    when :cancelled then "danger"
-    when :delivered then "success"
-    else "primary"
-    end
-  end
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
 
-  def confirmation_for(target)
-    case target.to_sym
-    when :cancelled
-      "Cancel this order? This cannot be undone."
-    when :delivered
-      "Mark this order as delivered?"
-    else
-      "Move this order to #{target}?"
-    end
-  end
-end
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <% if authenticated? %>
+      <header class="topbar">
+        <div class="topbar-inner">
+          <h1 class="brand"><%= link_to "ShipRight", root_path %></h1>
+          <nav>
+            <span class="user"><%= current_user.display_name %></span>
+            <%= button_to "Sign out", session_path, method: :delete, form: { class: "inline" }, class: "btn btn-link" %>
+          </nav>
+        </div>
+      </header>
+    <% end %>
+
+    <main class="container">
+      <% if flash.any? %>
+        <div class="flashes">
+          <% flash.each do |type, message| %>
+            <div class="flash flash-<%= type %>"><%= message %></div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

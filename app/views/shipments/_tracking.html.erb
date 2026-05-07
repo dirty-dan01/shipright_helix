@@ -1,0 +1,54 @@
+<% order = local_assigns[:order] || shipment&.order %>
+<% raise ArgumentError, "shipments/tracking partial requires order: when shipment is nil" if order.nil? %>
+
+<%= tag.div id: dom_id(order, :tracking) do %>
+  <div class="tracking-header">
+    <h3>Tracking</h3>
+    <% if shipment.present? %>
+      <%= button_to "Re-sync", sync_tracking_order_path(order),
+            method: :post, class: "btn btn-link",
+            form: { data: { turbo_confirm: "Queue a fresh tracking sync?" } } %>
+    <% end %>
+  </div>
+
+  <% if shipment.nil? %>
+    <p class="muted">No shipment yet — tracking becomes available once the order is shipped.</p>
+  <% else %>
+    <p>
+      <strong>Carrier:</strong> <%= shipment.carrier.titleize %> ·
+      <strong>Tracking #:</strong> <code><%= shipment.tracking_number %></code> ·
+      <strong>Status:</strong> <%= shipment.status.humanize %>
+    </p>
+    <% if shipment.last_sync_error.present? %>
+      <div class="flash flash-alert">
+        Last sync failed: <%= shipment.last_sync_error %>. Try Re-sync.
+      </div>
+    <% elsif shipment.synced? %>
+      <p class="muted">Last synced <%= time_ago_in_words(shipment.last_synced_at) %> ago.</p>
+    <% else %>
+      <p class="muted">Sync pending — refresh in a moment.</p>
+    <% end %>
+
+    <% events = shipment.tracking_events.chronological %>
+    <% if events.any? %>
+      <ol class="timeline">
+        <% events.each do |event| %>
+          <li class="timeline-entry">
+            <span class="timeline-time">
+              <%= event.occurred_at.strftime("%b %-d, %H:%M") %>
+            </span>
+            <span class="timeline-detail">
+              <strong><%= event.status.humanize %></strong>
+              <% if event.location.present? %>· <%= event.location %><% end %>
+              <% if event.description.present? %>
+                <br><span class="muted"><%= event.description %></span>
+              <% end %>
+            </span>
+          </li>
+        <% end %>
+      </ol>
+    <% else %>
+      <p class="muted">No tracking events received yet.</p>
+    <% end %>
+  <% end %>
+<% end %>

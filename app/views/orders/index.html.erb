@@ -1,0 +1,56 @@
+<% content_for :title, "Orders" %>
+
+<%= turbo_stream_from "orders:index" %>
+
+<div class="page-header">
+  <h2>Orders</h2>
+  <p class="muted"><%= pluralize(@orders.size, "order") %> shown</p>
+</div>
+
+<nav class="filters" aria-label="Status filter">
+  <%= link_to "All (#{@counts_by_status.values.sum})",
+        orders_path, class: filter_link_class(nil, @status_filter) %>
+  <% OrderStateMachine::STATES.each do |state| %>
+    <% count = @counts_by_status[state.to_s] || 0 %>
+    <%= link_to "#{state.to_s.titleize} (#{count})",
+          orders_path(status: state),
+          class: filter_link_class(state.to_s, @status_filter) %>
+  <% end %>
+</nav>
+
+<%= form_with url: bulk_update_orders_path, method: :post, data: { controller: "bulk-actions" } do |form| %>
+  <div class="bulk-actions">
+    <label class="bulk-select-all">
+      <input type="checkbox" data-bulk-actions-target="selectAll" data-action="bulk-actions#toggleAll">
+      <span>Select all</span>
+    </label>
+
+    <select name="state" data-bulk-actions-target="state">
+      <option value="approved">Approve selected</option>
+      <option value="cancelled">Cancel selected</option>
+    </select>
+
+    <%= form.submit "Apply to selected", class: "btn",
+          data: { confirm: "Apply this transition to all selected orders?" } %>
+  </div>
+
+  <table class="orders-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Reference</th>
+        <th>Customer</th>
+        <th>Status</th>
+        <th class="num">Total</th>
+        <th>Placed</th>
+      </tr>
+    </thead>
+    <tbody id="orders-list">
+      <%= render partial: "orders/row", collection: @orders, as: :order %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if @orders.empty? %>
+  <p class="empty">No orders match the current filter.</p>
+<% end %>

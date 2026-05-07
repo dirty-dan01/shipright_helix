@@ -1,0 +1,118 @@
+/* ShipRight — minimal styling. The brief explicitly does not evaluate visual
+   design, so this is structure + readability, not polish. */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #1f2937;
+  background: #f8fafc;
+}
+
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.95em; }
+
+.muted { color: #6b7280; font-size: 0.9em; }
+
+/* ---------- Layout ---------- */
+
+.topbar { background: #0f172a; color: #fff; padding: 0.75rem 1.5rem; }
+.topbar-inner { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+.brand a { color: #fff; font-weight: 700; }
+.brand { font-size: 1.1rem; margin: 0; }
+
+.topbar nav { display: flex; gap: 1rem; align-items: center; }
+.topbar .user { color: #cbd5e1; font-size: 0.9rem; }
+.topbar form.inline { display: inline; margin: 0; }
+.topbar .btn-link { background: none; border: none; color: #fbbf24; cursor: pointer; }
+
+.container { max-width: 1200px; margin: 1.5rem auto; padding: 0 1.5rem; }
+
+.page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; }
+.page-header h2 { margin: 0; }
+
+/* ---------- Cards ---------- */
+
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.card h3 { margin-top: 0; }
+
+.grid { display: grid; gap: 1rem; }
+.two-col { grid-template-columns: 1fr 1fr; }
+
+/* ---------- Forms ---------- */
+
+.stacked-form .field { margin-bottom: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.stacked-form input, select { padding: 0.5rem 0.6rem; border: 1px solid #d1d5db; border-radius: 4px; font-size: 0.95rem; }
+
+.btn { display: inline-block; padding: 0.45rem 0.9rem; border: 1px solid transparent; border-radius: 4px; background: #f3f4f6; color: #111827; cursor: pointer; font-size: 0.9rem; }
+.btn:hover { background: #e5e7eb; }
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-success { background: #059669; color: #fff; }
+.btn-success:hover { background: #047857; }
+.btn-danger { background: #dc2626; color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-link { background: none; color: #2563eb; padding: 0; border: none; }
+
+.actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.actions form { margin: 0; }
+
+.auth-card { max-width: 360px; margin: 4rem auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 1.5rem; }
+.auth-card h2 { margin-top: 0; }
+.auth-meta { margin-top: 1rem; font-size: 0.9rem; }
+
+/* ---------- Flashes ---------- */
+
+.flashes { margin-bottom: 1rem; }
+.flash { padding: 0.6rem 0.9rem; border-radius: 4px; margin-bottom: 0.5rem; font-size: 0.9rem; }
+.flash-notice { background: #d1fae5; color: #065f46; }
+.flash-alert  { background: #fee2e2; color: #991b1b; }
+
+/* ---------- Tables ---------- */
+
+table { width: 100%; border-collapse: collapse; background: #fff; }
+.orders-table, .line-items-table { border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; }
+th, td { padding: 0.65rem 0.85rem; text-align: left; border-bottom: 1px solid #f1f5f9; }
+th { background: #f8fafc; font-weight: 600; font-size: 0.85rem; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; }
+td.num, th.num { text-align: right; }
+td.select { width: 1%; }
+
+.total-row td { font-size: 1.05rem; border-top: 2px solid #1f2937; }
+
+/* ---------- Filters ---------- */
+
+.filters { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.filter-link { padding: 0.4rem 0.8rem; border-radius: 999px; background: #fff; border: 1px solid #e5e7eb; color: #374151; font-size: 0.85rem; }
+.filter-link.active { background: #1f2937; color: #fff; border-color: #1f2937; }
+
+/* ---------- Bulk actions ---------- */
+
+.bulk-actions { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.75rem; padding: 0.6rem 0.85rem; background: #fff; border: 1px solid #e5e7eb; border-radius: 4px; }
+.bulk-select-all { display: flex; gap: 0.4rem; align-items: center; }
+
+/* ---------- Status badges ---------- */
+
+.badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.badge-pending   { background: #f3f4f6; color: #374151; }
+.badge-approved  { background: #dbeafe; color: #1e40af; }
+.badge-fulfilled { background: #fef3c7; color: #92400e; }
+.badge-shipped   { background: #ddd6fe; color: #5b21b6; }
+.badge-delivered { background: #d1fae5; color: #065f46; }
+.badge-cancelled { background: #fee2e2; color: #991b1b; }
+
+/* ---------- Timeline ---------- */
+
+.timeline, .audit-list { list-style: none; padding: 0; margin: 1rem 0 0 0; }
+.timeline-entry, .audit-entry { display: flex; gap: 1rem; padding: 0.6rem 0; border-top: 1px solid #f1f5f9; }
+.timeline-time, .audit-time { color: #6b7280; font-size: 0.85rem; min-width: 130px; }
+
+.tracking-header { display: flex; justify-content: space-between; align-items: center; }
+
+/* ---------- Empty state ---------- */
+
+.empty { text-align: center; padding: 2rem; color: #6b7280; background: #fff; border: 1px dashed #cbd5e1; border-radius: 6px; }
