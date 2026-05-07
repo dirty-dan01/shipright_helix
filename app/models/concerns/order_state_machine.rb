@@ -52,10 +52,7 @@ module OrderStateMachine
   end
 
   class_methods do
-    # Subclasses register hooks via `after_transition_to(:shipped) { ... }`.
-    # Hooks are stored on the class so each Order subclass / inclusion gets its
-    # own list — and they always run inside the DB transaction that performed
-    # the transition (so a hook failure rolls back the status change).
+
     def after_transition_to(target_state, &block)
       transition_hooks[target_state.to_sym] << block
     end
